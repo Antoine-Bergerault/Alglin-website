@@ -1,1 +1,357 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Document</title>
+</head>
+<body class="p-6">
+    <div class="flex">
+        <table>
+            <thead>
+              <tr>
+                <th>Heure</th>
+                <th>Lundi</th>
+                <th>Mardi</th>
+                <th>Mercredi</th>
+                <th>Jeudi</th>
+                <th>Vendredi</th>
+                <th>Samedi</th>
+                <th>Dimanche</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div class="pl-2 w-32 border-t border-b border-r text-sm">
+            <h4 class="my-1">Statistiques</h4>
+            <div>
+                <p id="hours"><span>0</span> heures</p>
+                <ul id="courses"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = () => {
+            const config = {
+                start: 7*60 + 30, // 7h30
+                number: 66,
+                interval: 15
+            };
+
+            let stats = {
+                duration: 0,
+                courses: {}
+            }
+
+            for(let i = 0; i < config.number; i++){
+                const row = document.createElement('tr');
+                for(let j = 0; j < 8; j++){
+                    const cell = document.createElement('td');
+                    row.appendChild(cell);
+                }
+                document.querySelector('table tbody').appendChild(row);
+            }
+
+            Array.from(document.querySelectorAll('table tr > td:first-child')).forEach((td, i) => {
+                if(i%2==0){
+                    td.innerText = Math.floor((config.start + i*config.interval)/60) % 24 + ':' + ((config.start + i*config.interval) % 60 !== 0 ? (config.start + i*config.interval) % 60 : '00');
+                }
+            });
+
+
+
+            class EventElement extends HTMLElement{
+                get template() {
+                    const template = `
+                    <div class="text-center p-xs">
+                        <h5 id="key" class="text-sm"></h5>
+                        <p id="location" class="text-xs"></p>
+                        <p id="name" class="text-gray-800 text-xs break-all"></p>
+                        <p id="teacher" class="mt-xs text-xs"></p>
+                    </div>
+                    `;
+
+                    return template;
+                }
+
+                connectedCallback(){
+                    this.innerHTML = this.template;
+
+                    this.querySelector('#key').innerText = this.dataset.key ? this.dataset.key : '';
+                    this.querySelector('#name').innerText = this.dataset.name ? this.dataset.name : '';
+                    this.querySelector('#location').innerText = this.dataset.location != 'null' && this.dataset.location != null ? ' (' + this.dataset.location + ')': '';
+                    this.querySelector('#teacher').innerText = this.dataset.teacher ? this.dataset.teacher : '';
+
+                    //this.style.backgroundColor = this.dataset.color;
+                    this.parentElement.style.backgroundColor = this.dataset.color;
+                }
+
+            }
+
+            customElements.define('event-element', EventElement);
+
+
+
+
+
+            const events = [
+                {//0
+                    name: 'Analyse I',
+                    key: 'ANA1',
+                    color: '#fdcb6e',
+                    teacher: 'Anna Lachowska',
+                    wanted: '10h45'
+                },
+                {//1
+                    name: 'Algèbre linéaire',
+                    key: 'ALGLIN',
+                    color: '#ff7675',
+                    teacher: 'Christian Lucius Urech',
+                    wanted: '10h45'
+                },
+                {//2
+                    name: 'Physique générale : mécanique',
+                    key: 'MECA',
+                    color: '#0984e3',
+                    teacher: 'Sylvain Bréchet',
+                    wanted: '8h30'
+                },
+                {//3
+                    name: 'Advanced Information, computation, communication I',
+                    key: 'AICC1',
+                    color: '#00b894',
+                    teacher: 'Aberer Karl',
+                    wanted: '10h30'
+                },
+                {//4
+                    name: 'Introduction à la programmation',
+                    key: 'PROG',
+                    color: '#b2bec3',
+                    teacher: 'Jamila Sam',
+                    wanted: '9h'
+                },
+                {//5
+                    name: 'Dormir',
+                    key: 'SLEEP',
+                    color: '#ecf0f1'
+                },
+                {//6
+                    name: 'Retard Programme / Marge',
+                    key: 'DELAY',
+                    color: '#a29bfe'
+                },
+                {//7
+                    name: 'Course',
+                    key: 'SHOP',
+                    color: '#636e72'
+                }
+            ];
+
+
+
+            class Event{
+                constructor(id, begin, end, location = null, state = null){
+                    this.name = events[id].name;
+                    this.key = events[id].key;
+                    this.teacher = events[id].teacher ? events[id].teacher : '';
+                    this.color = events[id].color ?? '#eee';
+                    this.course = events[id];
+                    this.id = id;
+
+                    this.state = state;
+                    if(state == 'EX'){
+                        this.key = this.key + '-E';
+                        this.name = 'Ex. ' + this.name;
+                        this.color = this.color + '88';
+                    }else if(state == 'PREP'){
+                        this.key = this.key + '-P';
+                        this.name = 'Prep. ' + this.name;
+                        this.color = this.color + '44';
+                        this.teacher = '';
+                    }
+
+                    begin = '0' + begin.replace('h', 'h0');
+                    end = '0' + end.replace('h', 'h0');
+
+                    this.begin = begin.split('h');
+                    this.begin = parseInt(this.begin[0])*60 + parseInt(this.begin[1]);
+                    this.end = end.split('h');
+                    this.end = parseInt(this.end[0])*60 + parseInt(this.end[1]);
+
+                    this.location = location;
+
+                    this.type = null;
+                }
+
+                get duration(){
+                    return this.end - this.begin;
+                }
+
+                setType(type){
+                    this.type = type;
+                }
+
+                is(type){
+                    return this.type === type;
+                }
+            }
+
+            class Class{
+                constructor(...args){
+                    const event = new (Event.bind.apply(Event, [Event, ...args]))();
+                    event.setType('class');
+                    return event;
+                }
+            }
+
+            class Delay{
+                constructor(start, end){
+                    this.EVENT_ID = 6;
+
+                    const event = new Event(this.EVENT_ID, start, end);
+                    event.setType('delay');
+                    return event;
+                }
+            }
+
+            class Sleep{
+                constructor(start = '23h15'){
+                    this.EVENT_ID = 5;
+
+                    return new Event(this.EVENT_ID, start, Math.floor(config.start + config.interval*config.number)/60 + 'h' + ((config.start + config.interval*config.number)%60))
+                }
+            }
+
+            const days = [
+                [// Lundi
+                    new Class(0, '7h45', '10h', 'SG1'),
+                    new Class(2, '10h15', '12h', null, 'PREP'),
+                    new Class(1, '13h15', '15h', 'CO1'),
+                    new Class(3, '15h15', '17h', null, 'PREP'),
+                    new Class(4, '17h15', '19h', null, 'PREP'),
+                    new Delay('19h15', '20h30'),
+                    new Class(4, '21h15', '22h', null, 'PREP'),
+                    new Delay('22h', '22h30'),
+                    new Sleep()
+                ],
+                [// Mardi
+                    new Delay('7h30', '8h15'),
+                    new Class(3, '8h15', '10h', 'CO1'),
+                    new Class(2, '10h15', '12h', null, 'EX'),
+                    new Class(0, '13h15', '15h', null, 'PREP'),
+                    new Class(1, '15h15', '17h', null, 'PREP'),
+                    new Class(3, '17h15', '18h', null, 'PREP'),
+                    new Class(2, '18h15', '19h', null, 'PREP'),
+                    new Class(0, '19h15', '20h30', null, 'PREP'),
+                    new Class(4, '21h15', '22h', null, 'PREP'),
+                    new Class(1, '22h', '22h30', null, 'PREP'),
+                    new Sleep()
+                ],
+                [// Mercredi
+                    new Class(0, '7h45', '8h45', null, 'PREP'),
+                    new Class(3, '8h45', '10h', null, 'PREP'),
+                    new Class(0, '10h15', '12h', 'CE6'),
+                    new Class(4, '13h15', '15h', 'RLCE1240'),
+                    new Class(0, '15h15', '17h', null, 'EX'),
+                    new Class(2, '17h15', '19h', 'CE6'),
+                    new Class(1, '19h15', '20h30', null, 'PREP'),
+                    new Class(0, '21h15', '22h', null, 'PREP'),
+                    new Class(3, '22h15', '23h', null, 'PREP'),
+                    new Sleep()
+                ],
+                [// Jeudi
+                    new Class(2, '7h30', '8h15', null, 'PREP'),
+                    new Class(1, '8h15', '10h', 'CE6'),
+                    new Class(0, '10h15', '11h', null, 'PREP'),
+                    new Class(2, '12h15', '14h', 'CE6'),
+                    new Class(2, '14h', '15h45', null, 'PREP'),
+                    new Class(1, '16h', '18h', null, 'PREP'),
+                    new Class(3, '18h15', '19h', null, 'PREP'),
+                    new Class(2, '19h15', '20h', null, 'PREP'),
+                    new Delay('20h15', '21h00'),
+                    new Class(1, '21h15', '23h', null, 'PREP'),
+                    new Sleep()
+                ],
+                [// Vendredi
+                    new Delay('7h30', '8h15'),
+                    new Class(1, '8h15', '10h', null, 'EX'),
+                    new Class(3, '10h15', '12h', null, 'EX'),
+                    new Class(4, '13h15', '16h', null, 'EX'),
+                    new Class(3, '16h15', '18h', 'CO1'),
+                    new Delay('18h15', '19h00'),
+                    new Class(1, '19h15', '20h30', null, 'PREP'),
+                    new Class(3, '21h15', '22h', null, 'PREP'),
+                    new Class(0, '22h15', '23h', null, 'PREP'),
+                    new Sleep()
+                ],
+                [// Samedi
+                    new Class(0, '8h15', '10h', null, 'EX'),
+                    new Class(1, '10h15', '12h', null, 'EX'),
+                    new Class(2, '13h15', '15h', null, 'EX'),
+                    new Class(3, '15h15', '17h', 'INM202'),
+                    new Class(2, '17h15', '18h', null, 'PREP'),
+                    new Class(1, '18h15', '20h', null, 'PREP'),
+                    new Class(2, '21h15', '22h', null, 'PREP'),
+                    new Sleep()
+                ],
+                [// Dimanche
+                    new Delay('10h45', '11h15'),
+                    new Event(1, '11h30', '12h30', null, 'PREP'),
+                    new Class(1, '14h', '16h', null, 'PREP'),
+                    new Class(4, '17h', '18h30', null, 'PREP'),
+                    new Delay('21h15', '22h'),
+                    new Sleep()
+                ]
+            ]
+
+            const rows = document.querySelectorAll('table tr');
+            days.forEach((day, i) => {
+                const column = Array.from(document.querySelectorAll('table tr td:nth-child(' + (i + 2) + ')'));
+                day.forEach((event) => {
+                    const begin = event.begin;
+                    const delta = begin - config.start;
+                    const indexBegin = Math.floor(delta / config.interval);
+                    const indexEnd = Math.ceil((event.duration / config.interval) + indexBegin) - 1;
+
+                    if(event.is('class') || event.is('delay')){
+                        stats.duration += parseFloat(event.duration);
+                        if(typeof stats.courses[event.id] === 'undefined'){
+                            stats.courses[event.id] = {duration: 0, key: event.key.split('-')[0]};
+                        }
+
+                        stats.courses[event.id].duration += event.duration;
+                    }
+
+                    for(let k = indexBegin; k <= indexEnd; k++){
+                        const eventElement = document.createElement('event-element');
+                        if(k === indexBegin){ // put infos on the first cell
+                            eventElement.dataset.key = event.key;
+                            eventElement.dataset.name = event.name;
+                            eventElement.dataset.location = event.location;
+                            eventElement.dataset.teacher = event.teacher;
+                        }
+
+                        eventElement.dataset.color = event.color;
+
+                        if(!column[k].classList.contains('filled')){
+                            column[k].classList.add('filled');
+                        }
+                        column[k].appendChild(eventElement);
+                    }
+                });
+            });
+            
+            document.querySelector('#hours span').innerText = stats.duration/60;
+            const coursesElementStats = document.querySelector('#courses');
+            for(let id in stats.courses){
+                const courseElementStats = document.createElement('li');
+                courseElementStats.innerText = stats.courses[id].key + ': ' + Math.floor(stats.courses[id].duration / 60) + 'h' + (stats.courses[id].duration % 60 !== 0 ? stats.courses[id].duration % 60 : '00') + (typeof events[id].wanted != 'undefined' ? '/' + events[id].wanted : '');
+                coursesElementStats.appendChild(courseElementStats);
+            }
+        }
+    </script>
+</body>
+</html>
