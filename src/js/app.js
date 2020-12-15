@@ -1,17 +1,17 @@
-window.addEventListener('load', () => {
+window.addEventListener('load', function(){
 
-    const textarea = document.querySelector('#editor textarea');
-    const preview = document.querySelector('#preview');
+    var textarea = document.querySelector('#editor textarea');
+    var preview = document.querySelector('#preview');
 
-    const button = document.querySelector('#editor button');
+    var button = document.querySelector('#editor button');
 
-    textarea.addEventListener('input', () => {
+    textarea.addEventListener('input', function(){
         preview.innerText = textarea.value;
         MathJax.Hub.Typeset();
     });
 
-    button.addEventListener('click', () => {
-        const value = textarea.value;
+    button.addEventListener('click', function(){
+        var value = textarea.value;
         if(value.length > 0){
             console.log(value);
             alert('question registered');
