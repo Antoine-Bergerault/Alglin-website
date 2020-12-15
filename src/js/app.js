@@ -16,7 +16,7 @@ window.addEventListener('load', function(){
         var questionsElement = document.querySelector('#questions');
         questionsElement.innerHTML = '';
 
-        Object.values(value).forEach(function(child){
+        Object.values(value).reverse().forEach(function(child){
             var question = child.question;
             var questionElement = document.createElement('div');
             questionElement.classList.add('question');
