@@ -23,9 +23,32 @@
                 </div>
             </div>
 
-            
+            <div id="editor" class="my-3">
+                <h3>Soummettez votre propre question</h3>
+                <textarea rows="4"></textarea>
+                <div id="preview">
+                    
+                </div>
+                <button type="button">Enregistrer</button>
+            </div>
         </main>
     </section>
+
+    <script>
+        MathJax = {
+        tex: {
+            inlineMath: [['$', '$']]
+        },
+        svg: {
+            fontCache: 'global'
+        }
+        };
+        </script>
+        <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.0.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    
 
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js"></script>
@@ -47,5 +70,7 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     </script>
+
+    <script src="js/scripts.js"></script>
 </body>
 </html>
