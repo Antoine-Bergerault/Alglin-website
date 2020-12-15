@@ -27,6 +27,18 @@ main{
     @apply bg-gray-100;
 }
 
+.toolbar{
+    @apply flex flex-row-reverse;
+}
+
+.answer{
+    @apply text-center p-1 bg-gray-100 text-gray-100 w-16;
+}
+
+.answer:hover{
+    @apply text-gray-500;
+}
+
 #editor textarea, #preview{
     min-height: 64px;
     @apply w-full px-3 py-2 my-1 text-gray-700 border rounded-sm;
@@ -36,14 +48,26 @@ main{
     @apply outline-none;
 }
 
-#editor button{
+#submit{
     @apply bg-blue-600 text-gray-200 rounded px-4 py-2 float-right my-1;
 }
 
-#editor button:hover{
+#submit:hover{
     @apply bg-blue-500;
 }
 
-#editor button:focus{
+#submit:focus{
     @apply outline-none;
+}
+
+#buttons button{
+    @apply h-8 w-32 bg-gray-300 outline-none opacity-75;
+}
+
+#buttons button:hover{
+    @apply opacity-100;
+}
+
+#buttons button.active{
+    @apply bg-green-500;
 }

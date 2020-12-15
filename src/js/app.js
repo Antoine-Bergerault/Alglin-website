@@ -21,6 +21,17 @@ window.addEventListener('load', function(){
             var questionElement = document.createElement('div');
             questionElement.classList.add('question');
             questionElement.innerText = question;
+
+            var toolbar = document.createElement('div');
+            toolbar.classList.add('toolbar');
+            var answer = document.createElement('div');
+            answer.classList.add('answer');
+            answer.innerText = child.value == '0' ? 'Vrai' : 'Faux';
+
+            toolbar.appendChild(answer);
+
+            questionElement.appendChild(toolbar);
+
             questionsElement.appendChild(questionElement);
         });
         
@@ -35,7 +46,7 @@ window.addEventListener('load', function(){
     var textarea = document.querySelector('#editor textarea');
     var preview = document.querySelector('#preview');
 
-    var button = document.querySelector('#editor button');
+    var button = document.querySelector('#submit');
 
     textarea.addEventListener('input', function(){
         preview.innerText = textarea.value;
@@ -44,16 +55,29 @@ window.addEventListener('load', function(){
 
     button.addEventListener('click', function(){
         var value = textarea.value;
-        if(value.length > 0){
+        if(value.length > 0 && document.querySelector('#buttons button.active') !== null){
             console.log(value);
 
             firebase.database().ref().child('questions').push({
-                question: value
+                question: value,
+                value: document.querySelector('#buttons button.active').dataset.value
             });
 
             textarea.value = '';
             preview.innerText = '';
         }
+    });
+
+    Array.from(document.querySelectorAll('#buttons button')).forEach(function(button){
+        button.addEventListener('click', function(){
+            Array.from(document.querySelectorAll('#buttons button')).forEach(function(button){
+                if(button.classList.contains('active')){
+                    button.classList.remove('active');
+                }
+            });
+
+            button.classList.add('active');
+        });
     });
 
 });
