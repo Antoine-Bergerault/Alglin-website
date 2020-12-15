@@ -8,7 +8,69 @@
 </head>
 <body>
     <header class="bg-green-500 h-16 flex items-center justify-center">
-        <h1 class="text-lg text-white">Alglin Quiz</h1>
+        <h1 class="text-xl text-white">Alglin Quiz</h1>
     </header>
+
+    <section class="flex items-center justify-center py-10 px-6">
+        <main>
+            <div id="questions-container">
+                <h2 class="text-lg text-center p-3">Questions Vrai/Faux</h2>
+                
+                <div id="questions">
+                    <div class="question">
+                        Une matrice orthogonale est toujours inversible
+                    </div>
+                </div>
+            </div>
+
+            <div id="editor" class="my-3">
+                <h3>Soummettez votre propre question</h3>
+                <textarea rows="4"></textarea>
+                <div id="preview">
+                    
+                </div>
+                <button type="button">Enregistrer</button>
+            </div>
+        </main>
+    </section>
+
+    <script>
+        MathJax = {
+        tex: {
+            inlineMath: [['$', '$']]
+        },
+        svg: {
+            fontCache: 'global'
+        }
+        };
+        </script>
+        <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.0.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.0/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyAU0Q5-G_p-IRMqtBVDi7pY2zajZOO7vT8",
+        authDomain: "alglin-509c3.firebaseapp.com",
+        databaseURL: "https://alglin-509c3-default-rtdb.firebaseio.com",
+        projectId: "alglin-509c3",
+        storageBucket: "alglin-509c3.appspot.com",
+        messagingSenderId: "52030178919",
+        appId: "1:52030178919:web:703dbfee90b5c10ed1b6c2"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    </script>
+
+    <script src="js/scripts.js"></script>
 </body>
 </html>

@@ -3,3 +3,47 @@
 @tailwind components;
 
 @tailwind utilities;
+
+
+main{
+    width: 500px;
+    max-width: 80vw;
+}
+
+#questions-container{
+    width: 100%;
+    height: 700px;
+
+    overflow-y: auto;
+    
+    @apply rounded-sm shadow-md my-3;
+}
+
+.question{
+    @apply p-4;
+}
+
+.question:hover{
+    @apply bg-gray-100;
+}
+
+#editor textarea, #preview{
+    min-height: 64px;
+    @apply w-full px-3 py-2 my-1 text-gray-700 border rounded-sm;
+}
+
+#editor textarea:focus{
+    @apply outline-none;
+}
+
+#editor button{
+    @apply bg-blue-600 text-gray-200 rounded px-4 py-2 float-right my-1;
+}
+
+#editor button:hover{
+    @apply bg-blue-500;
+}
+
+#editor button:focus{
+    @apply outline-none;
+}
