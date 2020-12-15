@@ -85,13 +85,13 @@ task('dev-styles', ()=> {
 //Compiling styles
 task('build-styles', ()=> {
     return src(options.paths.dist.css + '/**/*')
-        .pipe(purgecss({
-            content: ["src/**/*.html","src/**/.*js"],
-            extractors: [{
-                extractor: TailwindExtractor,
-                extensions: ['html']
-            }]
-        }))
+        //.pipe(purgecss({
+        //    content: ["src/**/*.html","src/**/.*js"],
+        //    extractors: [{
+        //        extractor: TailwindExtractor,
+        //        extensions: ['html']
+        //    }]
+        //}))
         .pipe(cleanCSS({compatibility: 'ie8'}))
         .pipe(dest(options.paths.build.css));
 });
